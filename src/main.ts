@@ -7,7 +7,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 //svg插件需要配置代码
 import 'virtual:svg-icons-register'
-
+//引入仓库
+import pinia from './store'
 //配置element-plus国际化
 //@ts-expect-error
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
@@ -29,5 +30,7 @@ app.use(ElementPlus, {
 app.use(gloablComponents)
 //引入路由
 app.use(router)
+// 引入仓库
+app.use(pinia)
 //将应用挂载到挂载点上
 app.mount('#app')
