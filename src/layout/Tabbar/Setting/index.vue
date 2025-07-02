@@ -1,6 +1,6 @@
 <template>
-  <el-button icon="Refresh" circle />
-  <el-button icon="FullScreen" circle />
+  <el-button icon="Refresh" circle @click="Refash"/>
+  <el-button icon="FullScreen" circle  @click="fullScreen"/>
   <el-button icon="Setting" circle />
   <img
     src="../../../../public/logo.jpg"
@@ -24,9 +24,28 @@
 </template>
 
 <script setup lang="ts">
+import useLayoutSettingStore from '@/store/modules/LayoutSetting';
+//控制刷新
+const layoutSettingStore = useLayoutSettingStore()
 defineOptions({
   name:'Setting'
 })
+//刷新
+const Refash = () =>{
+  layoutSettingStore.refresh = !layoutSettingStore.refresh
+}
+//全屏切换const 
+const fullScreen = ()=>{
+//dom对象的一个属性，可以用来判断是否为全屏，[全屏：true，不是全屏：false]
+let full=document.fullscreenElement
+if(!full){
+  //实现全屏
+  document.documentElement.requestFullscreen()
+}else{
+  //退出全屏
+  document.exitFullscreen()
+}
+}
 </script>
 
 
