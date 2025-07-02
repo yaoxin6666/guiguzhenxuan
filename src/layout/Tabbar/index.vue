@@ -14,6 +14,9 @@
 import Breadcrumb from './Breadcrumb/index.vue'
 //引入顶部导航栏右侧设置
 import setting from './Setting/index.vue';
+defineOptions({
+  name:'Tabbar'
+})
 </script>
 
 <style scoped lang="scss">

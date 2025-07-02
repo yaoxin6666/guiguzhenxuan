@@ -23,6 +23,11 @@
   </el-dropdown>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineOptions({
+  name:'Setting'
+})
+</script>
+
 
 <style scoped></style>
