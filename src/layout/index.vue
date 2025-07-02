@@ -5,7 +5,12 @@
       <Logo></Logo>
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
-        <el-menu background-color="#001529" text-color="white">
+        <el-menu 
+        background-color="#001529" 
+        text-color="white" 
+        style="border-right: none;"
+        :default-active = "$route.path"
+        >
           <!-- 根据路由动态生成菜单 -->
         <Menu :menuList="userStore.menuRoutes"></Menu>
       </el-menu>
@@ -13,9 +18,13 @@
       
     </div>
     <!-- 顶部导航 -->
-    <div class="layout_tabbar">456</div>
+    <div class="layout_tabbar">
+      <Tabbar></Tabbar>
+    </div>
     <!-- 内容展示区域 -->
-    <div class="layout_main">789</div>
+    <div class="layout_main">
+      <Main></Main>
+    </div>
   </div>
 </template>
 
@@ -25,7 +34,14 @@ import Logo from './Logo/index.vue'
 import  Menu from './Menu/index.vue'
 //引入用户相关仓库
 import useUSerStore from '@/store/modules/user';
+//引入右侧展示区域
+import Main from './Main/index.vue'
+//引入顶部导航栏
+import Tabbar from './Tabbar/index.vue'
+//获取路由对象
+import { useRoute } from 'vue-router';
 const userStore = useUSerStore()
+const $route = useRoute()
 </script>
 
 <style scoped lang="scss">
