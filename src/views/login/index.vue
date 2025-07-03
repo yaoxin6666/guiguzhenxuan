@@ -41,9 +41,8 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import type { loginForm } from '@/api/user/type'
 import useUSerStore from '@/store/modules/user'
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { getTime } from '@/utils/time'
 const router=useRouter()
@@ -53,17 +52,17 @@ const loginForm = ref({ username: '', password: '' })
 const loading = ref(false)
 //登录校验的对象
 const ruleForm= ref()
+//路由对象
+const $route = useRoute()
 //登录
 const login = async() => {
   //保证全部表单校验通过再发请求
  await ruleForm.value.validate()
-  console.log(ruleForm.value);
-  
   loading.value = true
   try {
-    const result =await userStore.userLogin(loginForm.value)
-    console.log(result)
-    router.push('/')
+    await userStore.userLogin(loginForm.value)
+    let redirect:any = $route.query.redirect
+    router.push({path:redirect||'/'})
     loading.value = false
     ElNotification({
       type:'success',
@@ -83,10 +82,10 @@ const validatorUsername = (rule:any, value:any, callback:any) =>{
 //value:表单文本内容
 //callback:如果符合校验规则，callback放行
 //不符合校验规则，返回错误信息
-if(value.length>=6&&value.length<=10){
+if(value.length>=5&&value.length<=10){
   callback()
 }else{
-  callback(new Error('账号长度为六到十位'))
+  callback(new Error('账号长度为五到十位'))
 }
 }
 const validatorPassword = (rule:any, value:any, callback:any) =>{

@@ -120,31 +120,32 @@ export const constantRouter = [
     path: '/product',
     component: () => import('@/layout/index.vue'),
     name: 'shop',
-     redirect: '/product/attr',
+     redirect: '/product/tradefark',
     meta: {
       title: '商品管理',
       hidden: false,
       icon: 'ShoppingTrolley',
     },
     children: [
-      {
-        path: '/product/attr',
-        component:()=> import('@/views/product/attr/index.vue'),
-        name: 'attr',
-        meta: {
-          title: '品牌管理',
-          hidden: false,
-          icon: 'Shop',
-        },
-      },
+      
       {
         path: '/product/tradefark',
         component:()=> import('@/views/product/tradefark/index.vue'),
         name: 'tradefark',
         meta: {
-          title: '属性管理',
+          title: '品牌管理',
           hidden: false,
           icon: 'Files',
+        },
+      },
+      {
+        path: '/product/attr',
+        component:()=> import('@/views/product/attr/index.vue'),
+        name: 'attr',
+        meta: {
+          title: '属性管理',
+          hidden: false,
+          icon: 'Shop',
         },
       },
       {

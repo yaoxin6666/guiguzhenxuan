@@ -1,10 +1,7 @@
 <template>
   <div class="layout_container">
     <!-- 左侧菜单 -->
-    <div
-      class="layout_slider"
-      :class="{ fold: layoutSettingStore.fold ? true : false }"
-    >
+    <div class="layout_slider">
       <Logo></Logo>
       <el-scrollbar class="scrollbar">
         <!-- 菜单组件 -->
@@ -59,7 +56,6 @@ const layoutSettingStore = useLayoutSettingStore()
 .layout_container {
   width: 100%;
   height: 100vh;
-  background-color: skyblue;
   .layout_slider {
     width: $base-menu-width;
     height: 100vh;
@@ -69,9 +65,6 @@ const layoutSettingStore = useLayoutSettingStore()
       width: 100%;
       height: calc(100vh - $base-menu-logo-height);
     }
-    &.fold {
-      width: $base-menu-min-width;
-    }
   }
   .layout_tabbar {
     position: fixed;
@@ -80,7 +73,7 @@ const layoutSettingStore = useLayoutSettingStore()
     top: 0px;
     left: $base-menu-width;
     background-color: pink;
-    transition: all .3s;
+    transition: all 0.3s;
     &.fold {
       width: calc(100vw - $base-menu-min-width);
       left: $base-menu-min-width;
@@ -94,8 +87,7 @@ const layoutSettingStore = useLayoutSettingStore()
     top: $base-tabbar-height;
     padding: 20px;
     overflow: auto;
-    background-color: yellow;
-    transition: all .3s;
+    transition: all 0.3s;
     &.fold {
       width: calc(100vw - $base-menu-min-width);
       left: $base-menu-min-width;
