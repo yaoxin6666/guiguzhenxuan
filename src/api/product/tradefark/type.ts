@@ -1,6 +1,6 @@
 //品牌管理数据类型
 export interface ResponseData{
-cosde:number,
+code:number,
 message:string,
 ok:boolean
 }
