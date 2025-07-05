@@ -8,7 +8,7 @@ ok:boolean
 export interface Trademark {
   id?:number,
   tmName:string,
-  LogoUrl:string
+  logoUrl:string
 }
 //包含全部数据的ts类型
 export type Records = Trademark[]
