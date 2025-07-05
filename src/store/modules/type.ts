@@ -5,11 +5,15 @@ import type { CategoryObj } from '@/api/product/attr/type'
 export interface UserState {
   token: string | null
   menuRoutes: RouteRecordRaw[]
-  username:string
-  avatar:string
+  username: string
+  avatar: string
 }
 //分类仓库state数据类型
 export interface CategoryState {
-  category1Id:number|string,
-  category1Data:CategoryObj[]
+  category1Id: number | string
+  category1Data: CategoryObj[]
+  category2Id: number | string
+  category2Data: CategoryObj[]
+  category3Id: number | string
+  category3Data: CategoryObj[]
 }
