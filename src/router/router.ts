@@ -149,16 +149,6 @@ export const constantRouter = [
         },
       },
       {
-        path: '/product/sku',
-        component:()=> import('@/views/product/sku/index.vue'),
-        name: 'sku',
-        meta: {
-          title: 'SKU管理',
-          hidden: false,
-          icon: 'ShoppingCart',
-        },
-      },
-      {
         path: '/product/spu',
         component:()=> import('@/views/product/spu/index.vue'),
         name: 'spu',
@@ -168,6 +158,17 @@ export const constantRouter = [
           icon: 'Calendar',
         },
       },
+      {
+        path: '/product/sku',
+        component:()=> import('@/views/product/sku/index.vue'),
+        name: 'sku',
+        meta: {
+          title: 'SKU管理',
+          hidden: false,
+          icon: 'ShoppingCart',
+        },
+      },
+      
     ],
   },
 ]

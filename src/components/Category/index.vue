@@ -5,6 +5,7 @@
         <el-form-item label="一级分类">
           <!-- label为展示的数据 ：value为select收集的数据 -->
           <el-select
+            :disabled="toggle == 1"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category1Id"
@@ -20,6 +21,7 @@
         </el-form-item>
         <el-form-item label="二级分类">
           <el-select
+            :disabled="toggle == 1"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category2Id"
@@ -35,6 +37,7 @@
         </el-form-item>
         <el-form-item label="三级分类">
           <el-select
+            :disabled="toggle == 1"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category3Id"
@@ -55,6 +58,7 @@
 <script setup lang="ts">
 import useCategoryStore from '@/store/modules/category'
 import { onMounted } from 'vue'
+
 const categoryStore = useCategoryStore()
 //组件挂载后，发请求获取一级分类数据
 onMounted(() => {
@@ -62,12 +66,10 @@ onMounted(() => {
 })
 //获取一级分类数据
 const getCategory1 = () => {
-
   categoryStore.getCategory1()
 }
 //获取二级分类数据
 const getCategory2 = () => {
-  
   categoryStore.category2Id = ''
   categoryStore.category3Data = []
   categoryStore.category3Id = ''
@@ -76,9 +78,11 @@ const getCategory2 = () => {
 }
 //获取三级分类数据
 const getCategory3 = () => {
-    categoryStore.category3Id = ''
+  categoryStore.category3Id = ''
   categoryStore.getCategory3()
 }
+//获取切换按钮数据
+defineProps(['toggle'])
 </script>
 
 <style scoped></style>

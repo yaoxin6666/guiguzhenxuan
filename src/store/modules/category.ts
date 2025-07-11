@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { getCategory1, getCategory2, getCategory3 } from '@/api/product/attr'
-import type { CategoryResponseData } from '@/api/product/attr/type'
+import { getAttrInfoList, getCategory1, getCategory2, getCategory3 } from '@/api/product/attr'
+import type { AttrResponseData, CategoryResponseData } from '@/api/product/attr/type'
 import type { CategoryState } from './type'
 //商品分类相关仓库
 const useCategoryStore = defineStore('categoryStore', {
@@ -39,6 +39,12 @@ const useCategoryStore = defineStore('categoryStore', {
         this.category3Data = result.data
       }
     },
+    //获取已有属性
+    async getAttrInfoList(){
+  return  await  getAttrInfoList(this.category1Id,this.category2Id,this.category3Id)
+    
+     
+     }
   },
   getters: {},
 })
