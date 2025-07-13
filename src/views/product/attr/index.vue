@@ -17,7 +17,6 @@
           border
           stripe
           size="large"
-          v-loading="!attrInfoList"
         >
           <el-table-column
             prop="序号"
@@ -33,7 +32,7 @@
           ></el-table-column>
           <el-table-column label="属性值名称">
             <template #="{ row, $index }">
-              <el-tag v-for="(item, index) in row.attrValueList" :key="item.id" style="margin-left:10px;">
+              <el-tag v-for="(item, index) in row.attrValueList" :key="item.id" style="margin-left: 5px;">
                 {{ item.valueName }}
               </el-tag>
             </template>
@@ -256,7 +255,7 @@ if(result.code ==200){
 }
 //组件销毁时，删除仓库数据
 onBeforeUnmount(()=>{
-  categoryStore.$reset()
+  categoryStore.$reset
 })
 </script>
 

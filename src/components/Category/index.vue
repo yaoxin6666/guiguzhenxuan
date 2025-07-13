@@ -5,7 +5,7 @@
         <el-form-item label="一级分类">
           <!-- label为展示的数据 ：value为select收集的数据 -->
           <el-select
-            :disabled="toggle == 1"
+            :disabled="toggle !=0"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category1Id"
@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item label="二级分类">
           <el-select
-            :disabled="toggle == 1"
+            :disabled="toggle !=0"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category2Id"
@@ -37,7 +37,7 @@
         </el-form-item>
         <el-form-item label="三级分类">
           <el-select
-            :disabled="toggle == 1"
+            :disabled="toggle !=0"
             size="large"
             style="width: 200px"
             v-model="categoryStore.category3Id"
