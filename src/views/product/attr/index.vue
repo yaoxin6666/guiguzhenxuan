@@ -140,7 +140,8 @@ let attrParams = reactive<Attr>({
   attrValueList: [],
   //新增属性值数组
   categoryId: '', //三级分类id
-  categoryLevel: 3, //几级分类
+  categoryLevel: 3,
+  attrIdAndValueId: undefined
 })
 //获取已有属性值
 watch(

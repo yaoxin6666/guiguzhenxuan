@@ -126,7 +126,7 @@ let unSelectSaleAttr = computed(() => {
 const $emit = defineEmits(['changeToggle'])
 //点击取消返回主页面
 const cancle = () => {
-  $emit('changeToggle', 0)
+  $emit('changeToggle',{flag:0,params:spuParams.value.id?'update':'add'})
 }
 //点击保存
 const save = async()=>{
@@ -144,13 +144,15 @@ if(result.code == 200){
     type:'success',
     message:spuParams.value.id?'修改成功':'添加成功'
   })
+
 }else{
    ElMessage({
     type:'error',
     message:spuParams.value.id?'修改失败':'添加失败'
   })
-}
 
+}
+    $emit('changeToggle',{flag:0,params:spuParams.value.id?'update':'add'})
 }
 //发送请求，获取某个已有的spu的数据
 const getTrademark = async (row: SpuData) => {

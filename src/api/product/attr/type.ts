@@ -32,6 +32,7 @@ export type AttrValueList = AttrValue[]
 
 //属性对象
 export interface Attr {
+  attrIdAndValueId: unknown
   id?:number,
   attrName:string,
   categoryId:number|string,
