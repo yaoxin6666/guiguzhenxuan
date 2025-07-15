@@ -49,7 +49,7 @@
         v-model:current-page="pageNo"
         v-model:page-size="pageSize"
         :page-sizes="[3, 5, 7, 9]"
-        :size="size"
+        size="size"
         :background="true"
         layout=" prev, pager, next, jumper,->,total, sizes,"
         :total="total"
