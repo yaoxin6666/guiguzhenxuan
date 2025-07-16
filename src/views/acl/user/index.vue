@@ -13,8 +13,19 @@
     </el-card>
     <el-card style="margin: 10px 0">
       <el-button type="primary" @click="addUser">添加</el-button>
-      <el-button type="danger">删除</el-button>
-      <el-table border style="margin: 10px 0" :data="userInfoList">
+      <el-button
+        type="danger"
+        :disabled="selectIdArr.length ? false : true"
+        @click="deleteUserList"
+      >
+        删除
+      </el-button>
+      <el-table
+        border
+        style="margin: 10px 0"
+        :data="userInfoList"
+        @selection-change="selectChange"
+      >
         <el-table-column
           type="selection"
           width="80px"
@@ -69,14 +80,33 @@
           align="center"
         >
           <template #="{ row, $index }">
-            <el-button icon="User" size="small" type="primary" @click="roleAssignments(row)">分配角色</el-button>
+            <el-button
+              icon="User"
+              size="small"
+              type="primary"
+              @click="roleAssignments(row)"
+            >
+              分配角色
+            </el-button>
             <el-button
               icon="Edit"
               size="small"
               type="warning"
               @click="updateUserInfo(row)"
-            >编辑</el-button>
-            <el-button icon="Delete" size="small" type="danger">删除</el-button>
+            >
+              编辑
+            </el-button>
+
+            <el-popconfirm
+              :title="`你确定要删除${row.name}吗？`"
+              @confirm="deleteUser(row)"
+            >
+              <template #reference>
+                <el-button icon="Delete" size="small" type="danger">
+                  删除
+                </el-button>
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -113,7 +143,11 @@
               v-model="userParams.username"
             ></el-input>
           </el-form-item>
-          <el-form-item label="用户密码" prop="password" v-show="!userParams.id">
+          <el-form-item
+            label="用户密码"
+            prop="password"
+            v-show="!userParams.id"
+          >
             <el-input
               placeholder="请输入用户密码"
               v-model="userParams.password"
@@ -130,34 +164,37 @@
       <template #header>分配角色(职位)</template>
       <template #default>
         <el-form>
-<el-form-item>
-  <el-input disabled="disabled" v-model="roleInput"></el-input>
-</el-form-item>
-<el-form-item>
-    <el-checkbox
-    v-model="checkAll"
-    :indeterminate="isIndeterminate"
-    @change="handleCheckAllChange"
-  >
-   全选
-  </el-checkbox>
- 
-</el-form-item>
-<el-form-item>
- <el-checkbox-group
-    v-model="checkedRole"
-    @change="handleCheckedCitiesChange"
-  >
-    <el-checkbox v-for="(item,index) in allRole" :key="index" :label="item" :value="item">
-      {{ item }}
-    </el-checkbox>
-  </el-checkbox-group>
-</el-form-item>
+          <el-form-item>
+            <el-input disabled="disabled" v-model="userParams.name"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
+            >
+              全选
+            </el-checkbox>
+          </el-form-item>
+          <el-form-item>
+            <el-checkbox-group
+              v-model="checkedRole"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox
+                v-for="(item, index) in allRole"
+                :key="item.id"
+                :label="item"
+              >
+                {{ item.roleName }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
         </el-form>
       </template>
       <template #footer>
-                <el-button type="primary" >保存</el-button>
-        <el-button >取消</el-button>
+        <el-button type="primary" @click="confirmClick">保存</el-button>
+        <el-button>取消</el-button>
       </template>
     </el-drawer>
   </div>
@@ -165,8 +202,22 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive, nextTick } from 'vue'
-import { addOrUpdateUserInfo, getUserList } from '@/api/acl/user'
-import { Records, User, UserResponseData } from '@/api/acl/user/type'
+import {
+  addOrUpdateUserInfo,
+  bachRemove,
+  getAllRole,
+  getUserList,
+  removeUser,
+  setRole,
+} from '@/api/acl/user'
+import {
+  AllRoleResponseData,
+  Records,
+  RoleData,
+  SetRoleResponseData,
+  User,
+  UserResponseData,
+} from '@/api/acl/user/type'
 import { ElMessage } from 'element-plus'
 //第几页
 let pageNO = ref<number>(1)
@@ -188,16 +239,17 @@ let userParams = reactive<User>({
 let ruleForm = ref()
 //分配角色抽屉开关
 let drawer1 = ref<boolean>(false)
-//分配角色input
-let roleInput = ref<string>('')
+
 //全选框
 let checkAll = ref<boolean>(false)
 //设置不确定状态，仅负责样式控制
 const isIndeterminate = ref(true)
 //全部职位
-const allRole = ref<string[]>(['1','2','3','4'])
+const allRole = ref<RoleData[]>([])
 //已选职位
-const checkedRole = ref<string[]>([])
+const checkedRole = ref<RoleData[]>([])
+//批量删除用户的id
+let selectIdArr = ref<User[]>([])
 const handleSizeChange = () => {
   getUserInfoList()
 }
@@ -229,7 +281,7 @@ const addUser = () => {
 const updateUserInfo = async (row: User) => {
   drawer.value = true
   Object.assign(userParams, row)
-    nextTick(() => {
+  nextTick(() => {
     ruleForm.value.clearValidate('username')
     ruleForm.value.clearValidate('name')
   })
@@ -242,7 +294,7 @@ const save = async () => {
       type: 'success',
       message: userParams.id ? '修改成功' : '添加成功',
     })
-    getUserInfoList(userParams.id?pageNO.value:1)
+    getUserInfoList(userParams.id ? pageNO.value : 1)
     //浏览器自动刷新
     window.location.reload()
   } else {
@@ -258,19 +310,88 @@ const cancel = () => {
   drawer.value = false
 }
 //角色分配
-const roleAssignments = (row:User)=>{
+const roleAssignments = async (row: User) => {
   drawer1.value = true
-roleInput.value = row.username
-}
+  Object.assign(userParams, row)
+  let result: AllRoleResponseData = await getAllRole(row.id as number)
+  if (result.code == 200) {
+    console.log(result)
 
-const handleCheckAllChange = (val:string) => {
- checkedRole.value = val ? allRole.value : []
+    allRole.value = result.data.allRolesList
+    checkedRole.value = result.data.assignRoles
+  }
+}
+//全选按钮点击回调
+const handleCheckAllChange = (val: boolean) => {
+  checkedRole.value = val ? allRole.value : []
   isIndeterminate.value = false
 }
-const handleCheckedCitiesChange = (value:string[]) => {
+//复选框按钮点击回调
+const handleCheckedCitiesChange = (value: string[]) => {
   const checkedCount = value.length
+
   checkAll.value = checkedCount === allRole.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount <allRole.value.length
+  isIndeterminate.value =
+    checkedCount > 0 && checkedCount < allRole.value.length
+}
+//职位分配确定
+const confirmClick = async () => {
+  let data = {
+    userId: userParams.id as number,
+    roleIdList: checkedRole.value.map((item) => item.id) as number[],
+  }
+  let result: SetRoleResponseData = await setRole(data)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '修改用户权限成功',
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '修改用户权限失败',
+    })
+  }
+  drawer1.value = false
+  window.location.reload()
+}
+
+//删除某个角色
+const deleteUser = async (row: User) => {
+  let result = await removeUser(row.id as number)
+
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除用户成功',
+    })
+        getUserInfoList(userInfoList.value.length > 1 ? pageNO.value : pageNO.value - 1,)
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除用户失败',
+    })
+  }
+}
+//当table选择项发生变化时会触发该事件
+const selectChange = (value: any) => {
+  selectIdArr.value = value
+}
+const deleteUserList = async () => {
+  let selectIdList = selectIdArr.value.map((item: any) => item.id)
+  let result = await bachRemove(selectIdList)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除用户成功',
+    })
+    getUserInfoList(userInfoList.value.length > 1 ? pageNO.value : pageNO.value - 1,)
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除用户失败',
+    })
+  }
 }
 onMounted(() => {
   getUserInfoList()
