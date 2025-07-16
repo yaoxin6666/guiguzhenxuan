@@ -57,7 +57,7 @@
         </el-table-column>
       </el-table>
       <el-drawer v-model="drawer">
-        <template #header>查看商品详情</template>
+        <template #header class="drawer_header">查看商品详情</template>
         <template #default>
           <el-row>
             <el-col :span="8">名称</el-col>
@@ -226,5 +226,10 @@ let result = await deleteSku((row.id as number))
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+ .drawer_header{
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
