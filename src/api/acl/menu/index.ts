@@ -12,10 +12,10 @@ enum API {
   DELETEMENU_URL = '/admin/acl/permission/remove/',
 }
 //获取菜单数据
-export const reqAllPermisstion = () =>
+export const getAllPermisstion = () =>
   request.get<any, PermisstionResponseData>(API.ALLPERMISSTION_URL)
 //添加与更新菜单的方法
-export const reqAddOrUpdateMenu = (data: MenuParams) => {
+export const addOrUpdateMenu = (data: MenuParams) => {
   if (data.id) {
     return request.put<any, any>(API.UPDATE_URL, data)
   } else {
@@ -24,5 +24,5 @@ export const reqAddOrUpdateMenu = (data: MenuParams) => {
 }
 
 //删除某一个已有的菜单
-export const reqRemoveMenu = (id: number) =>
+export const removeMenu = (id: number) =>
   request.delete<any, any>(API.DELETEMENU_URL + id)
