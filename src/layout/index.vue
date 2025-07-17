@@ -72,7 +72,6 @@ const layoutSettingStore = useLayoutSettingStore()
     height: $base-tabbar-height;
     top: 0px;
     left: $base-menu-width;
-    background-color: pink;
     transition: all 0.3s;
     &.fold {
       width: calc(100vw - $base-menu-min-width);

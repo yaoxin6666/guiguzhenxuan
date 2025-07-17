@@ -1,7 +1,33 @@
 <template>
   <el-button icon="Refresh" circle @click="Refash" />
   <el-button icon="FullScreen" circle @click="fullScreen" />
-  <el-button icon="Setting" circle />
+
+  <el-popover placement="top-start" :width="300" trigger="hover">
+    <template #default>
+      <el-form>
+        <el-form-item label="主题颜色">
+          <el-color-picker
+            v-model="color"
+            show-alpha
+            :predefine="predefineColors"
+            :teleported="false"
+            @change="setColor"
+          />
+        </el-form-item>
+        <el-form-item label="暗黑模式">
+          <el-switch
+            @change="changeDark"
+            v-model="value"
+            active-action-icon="Moon"
+            inactive-action-icon="Sunny"
+          />
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #reference>
+      <el-button icon="Setting" circle />
+    </template>
+  </el-popover>
   <img
     :src="userStore.avatar"
     alt=""
@@ -28,10 +54,13 @@ import useLayoutSettingStore from '@/store/modules/LayoutSetting'
 import useUSerStore from '@/store/modules/user'
 import { useRoute, useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
+import { ref } from 'vue'
 const userStore = useUSerStore()
 //获取路由对象
 const $route = useRoute()
 const $router = useRouter()
+//暗黑模式开关
+let value = ref(false)
 //控制刷新
 const layoutSettingStore = useLayoutSettingStore()
 defineOptions({
@@ -62,6 +91,33 @@ const logout = async () => {
     title: '退出登录成功',
   })
 }
+//暗黑模式切换
+const changeDark = () => {
+  let html = document.documentElement
+  value.value ? (html.className = 'dark') : (html.className = '')
+}
+//设置主题色
+const setColor = () =>{
+   let html = document.documentElement
+   html.style.setProperty('--el-color-primary',color.value)
+}
+const color = ref('rgba(255, 69, 0, 0.68)')
+const predefineColors = ref([
+  '#ff4500',
+  '#ff8c00',
+  '#ffd700',
+  '#90ee90',
+  '#00ced1',
+  '#1e90ff',
+  '#c71585',
+  'rgba(255, 69, 0, 0.68)',
+  'rgb(255, 120, 0)',
+  'hsv(51, 100, 98)',
+  'hsva(120, 40, 94, 0.5)',
+  'hsl(181, 100%, 37%)',
+  'hsla(209, 100%, 56%, 0.73)',
+  '#c7158577',
+])
 </script>
 
 <style scoped></style>
