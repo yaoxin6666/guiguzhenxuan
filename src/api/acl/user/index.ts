@@ -17,8 +17,8 @@ REMOVEUSER_URL='/admin/acl/user/remove/',
 REMOVEUSERLIST_URL = '/admin/acl/user/batchRemove'
 }
 //获取已有用户信息
-export const getUserList = (page: number, limit: number) =>
-  request.get<any,UserResponseData>(API.USERLIST_URL + `${page}/${limit}`)
+export const getUserList = (page: number, limit: number,username:string) =>
+  request.get<any,UserResponseData>(API.USERLIST_URL + `${page}/${limit}/?username=${username}`)
   //添加新用户,修改已有用户信息
 export const addOrUpdateUserInfo = (data:User)=>{
   if(data.id){

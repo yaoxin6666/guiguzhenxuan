@@ -3,11 +3,11 @@
     <el-card>
       <el-form :inline="true" class="form">
         <el-form-item label="用户名：">
-          <el-input placeholder="请输入用户名"></el-input>
+          <el-input placeholder="请输入用户名" v-model="userName"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="search" :disabled="userName?false:true">搜索</el-button>
+          <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -201,6 +201,7 @@
 </template>
 
 <script setup lang="ts">
+import useLayoutSettingStore from '@/store/modules/LayoutSetting'
 import { ref, onMounted, reactive, nextTick } from 'vue'
 import {
   addOrUpdateUserInfo,
@@ -250,13 +251,17 @@ const allRole = ref<RoleData[]>([])
 const checkedRole = ref<RoleData[]>([])
 //批量删除用户的id
 let selectIdArr = ref<User[]>([])
+//搜索的用户名
+let userName=ref<string>('')
+//仓库
+const layoutSettingStore = useLayoutSettingStore()
 const handleSizeChange = () => {
   getUserInfoList()
 }
 //获取用户信息
 const getUserInfoList = async (pager = 1) => {
   pageNO.value = pager
-  let result: UserResponseData = await getUserList(pageNO.value, pageSize.value)
+  let result: UserResponseData = await getUserList(pageNO.value, pageSize.value,userName.value)
   userInfoList.value = result.data.records
   total.value = result.data.total
 }
@@ -392,6 +397,16 @@ const deleteUserList = async () => {
       message: '删除用户失败',
     })
   }
+}
+//搜索按钮
+const search = ()=>{
+ getUserInfoList()
+  
+  userName.value = ''
+}
+//重置按钮
+const reset = ()=>{
+layoutSettingStore.refresh = !layoutSettingStore.refresh
 }
 onMounted(() => {
   getUserInfoList()
